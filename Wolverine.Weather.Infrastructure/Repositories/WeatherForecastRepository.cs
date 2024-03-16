@@ -19,5 +19,14 @@ namespace Wolverine.Weather.Infrastructure.Repositories
                 return result;
             }
         }
+        public WeatherForecast? GetWeatherForecast(int id)
+        {
+            using (var connection = _databaseConnectionFactory.GetWeatherDbConnection())
+            {
+                var result = connection.QueryFirstOrDefault<WeatherForecast>("SELECT TOP 1 * FROM dbo.WeatherForecasts WHERE WeatherForecastId = @id", id);
+
+                return result;
+            }
+        }
     }
 }

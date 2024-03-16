@@ -14,5 +14,7 @@ namespace Wolverine.Weather.Domain.Services
         {
             return _weatherForecastRepository.GetWeatherForecasts();
         }
+        //Method for returning a weather forecast by ID:
+
     }
 }

@@ -4,6 +4,7 @@ namespace Wolverine.Weather.Domain.Interfaces
 {
     public interface IWeatherForecastService
     {
-        public IEnumerable<WeatherForecast> GetWeatherForecasts();
+        IEnumerable<WeatherForecast> GetWeatherForecasts();
+        //public method 
     }
 }
