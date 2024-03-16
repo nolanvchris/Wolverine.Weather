@@ -25,7 +25,7 @@ namespace Wolverine.Weather.API.Controllers
         }
         [HttpGet]
         [Route("{id}")]
-        //Homework
+        //Homework return 1 specific forecast.
         public WeatherForecast Get(int id)
         {
             var result = _weatherForecastService.GetWeatherForecast(id);
