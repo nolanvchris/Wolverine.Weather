@@ -9,9 +9,9 @@ namespace Wolverine.Weather.Infrastructure.Repositories
     public class DatabaseConnectionFactory : IDatabaseConnectionFactory
     {
         private readonly DatabaseConfigurationSection _databaseConfiguration;
-        public DatabaseConnectionFactory(IOptions<DatabaseConfigurationSection> databaseConfiguration)
+        public DatabaseConnectionFactory(IOptions<DatabaseConfigurationSection> databaseConfiguration) //Constructor
         {
-            _databaseConfiguration = databaseConfiguration.Value; //Question: What is IOptions?
+            _databaseConfiguration = databaseConfiguration.Value;
         }
         public int CommandTimeout => _databaseConfiguration.CommandTimeout;
         public int RetryAttempts => _databaseConfiguration.RetryAttempts;

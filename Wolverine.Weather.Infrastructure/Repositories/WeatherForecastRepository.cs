@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using System.Data.SqlClient;
 using Wolverine.Weather.Domain.Interfaces;
 using Wolverine.Weather.Domain.Models;
 
@@ -23,8 +24,7 @@ namespace Wolverine.Weather.Infrastructure.Repositories
         {
             using (var connection = _databaseConnectionFactory.GetWeatherDbConnection())
             {
-                var result = connection.QueryFirstOrDefault<WeatherForecast>("SELECT TOP 1 * FROM dbo.WeatherForecasts WHERE WeatherForecastId = @id", id);
-
+                var result = connection.QueryFirstOrDefault<WeatherForecast>("SELECT TOP 1 * FROM dbo.WeatherForecasts WHERE WeatherForecastId = @id", new { id }); //You have to create a new anonymous object and pass the variable into it.
                 return result;
             }
         }
