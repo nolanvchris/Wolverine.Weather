@@ -18,14 +18,17 @@ namespace Wolverine.Weather.API.Controllers
         }
 
         [HttpGet] //The get attribute tag does not need a name Ex. [HttpGet(Name = GetWeatherForecast)]. C# will name it after the controller by truncating off the "*Controller" part
-        public IEnumerable<WeatherForecast> Get()
+        public IEnumerable<WeatherForecast> GetAll()
         {
             var result = _weatherForecastService.GetWeatherForecasts();
-            //foreach(var item in result)
-            //{
-            //    var viewModel = new WeatherForecastViewModel {TemperatureC = item.TemperatureC };
-            //}
-            /*var viewModels = result.Select(a => new WeatherForecastViewModel { TemperatureC = a.TemperatureC });*/ //lambda expression
+            return result;
+        }
+        [HttpGet]
+        [Route("{id}")]
+        //Homework return 1 specific forecast.
+        public WeatherForecast Get(int id)
+        {
+            var result = _weatherForecastService.GetWeatherForecast(id);
             return result;
         }
     }
