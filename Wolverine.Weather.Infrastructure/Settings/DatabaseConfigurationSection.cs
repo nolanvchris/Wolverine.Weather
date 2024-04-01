@@ -22,5 +22,6 @@
     public class StoredProcedureNames
     {
         public string WeatherForecastInsertStoredProcedureName { get; set; }
+        public string WeatherForecastGetByIdStoredProcedureName { get; set; }
     }
 }

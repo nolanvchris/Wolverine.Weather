@@ -31,9 +31,9 @@ namespace Wolverine.Weather.API.Controllers
         }
         [HttpGet]
         [Route("{id}")]
-        public WeatherForecast Get(int id) //Homework: Fix this
+        public async Task<WeatherForecast> Get(int id, CancellationToken cancellationToken) //Homework: Fix this
         {
-            var result = _weatherForecastService.GetWeatherForecast(id);
+            var result = await _weatherForecastService.GetWeatherForecast(id, cancellationToken);
             return result;
         }
         [HttpPost]

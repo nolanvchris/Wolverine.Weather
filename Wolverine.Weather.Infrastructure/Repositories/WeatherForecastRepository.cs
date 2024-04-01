@@ -39,12 +39,34 @@ namespace Wolverine.Weather.Infrastructure.Repositories
             }
         }
 
-        public WeatherForecast? GetWeatherForecast(int id)
+        public async Task<WeatherForecast> GetWeatherForecast(int id, CancellationToken cancellationToken)
         {
-            using (var connection = _databaseConnectionFactory.GetWeatherDbConnection())
+            try
             {
-                var result = connection.QueryFirstOrDefault<WeatherForecast>("SELECT TOP 1 * FROM dbo.WeatherForecasts WHERE WeatherForecastId = @id", new { id }); //You have to create a new anonymous object and pass the variable into it.
-                return result;
+                string storedProcedure = _databaseConfiguration.StoredProcedureNames.WeatherForecastGetByIdStoredProcedureName;
+
+                var parameters = new DynamicParameters();
+
+                parameters.Add("@Id", id, DbType.Int32);
+
+                using (var connection = _databaseConnectionFactory.GetWeatherDbConnection())
+                {
+                    var command = new CommandDefinition(
+                        storedProcedure,
+                        parameters,
+                        commandType: CommandType.StoredProcedure,
+                        commandTimeout: _databaseConnectionFactory.CommandTimeout,
+                        cancellationToken: cancellationToken);
+
+                    var result = await connection.QueryFirstOrDefaultAsync<WeatherForecastDto>(command);
+                    var fromSource = _mapper.Map<WeatherForecast>(result);
+                    return fromSource;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error on {nameof(AddWeatherForecast)} exception message: {ex.Message}");
+                throw;
             }
         }
 
