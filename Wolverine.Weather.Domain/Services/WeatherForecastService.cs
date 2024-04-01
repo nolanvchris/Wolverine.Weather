@@ -20,5 +20,10 @@ namespace Wolverine.Weather.Domain.Services
         {
             return _weatherForecastRepository.GetWeatherForecasts();
         }
+
+        public async Task<WeatherForecast> AddWeatherForecast(AddWeatherForecastRequest request, CancellationToken cancellationToken)
+        {
+            return await _weatherForecastRepository.AddWeatherForecast(request, cancellationToken);
+        }
     }
 }

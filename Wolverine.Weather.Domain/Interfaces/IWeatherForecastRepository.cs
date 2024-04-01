@@ -6,5 +6,6 @@ namespace Wolverine.Weather.Domain.Interfaces
     {
         IEnumerable<WeatherForecast> GetWeatherForecasts();
         WeatherForecast? GetWeatherForecast(int id);
+        Task<WeatherForecast> AddWeatherForecast(AddWeatherForecastRequest request, CancellationToken cancellationToken);
     }
 }

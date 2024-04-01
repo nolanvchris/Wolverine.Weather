@@ -1,5 +1,6 @@
 using Wolverine.Weather.Domain.Interfaces;
 using Wolverine.Weather.Domain.Services;
+using Wolverine.Weather.Infrastructure.Profiles;
 using Wolverine.Weather.Infrastructure.Repositories;
 using Wolverine.Weather.Infrastructure.Settings;
 
@@ -23,8 +24,14 @@ namespace Wolverine.Weather.API
             builder.Services.AddScoped<IWeatherForecastRepository, WeatherForecastRepository>();
             builder.Services.AddSingleton<IDatabaseConnectionFactory, DatabaseConnectionFactory>();
             builder.Services.Configure<DatabaseConfigurationSection>(builder.Configuration.GetSection("DatabaseConfiguration"));
-            //Nolan: end services added
             
+            List<Type> scanTypes = new List<Type> { typeof(InfrastructureProfile) };
+            builder.Services.AddAutoMapper(options =>
+            {
+                options.AllowNullCollections = true;
+            }, scanTypes);
+            //Nolan: end services added
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Wolverine.Weather.Domain.Interfaces;
 using Wolverine.Weather.Domain.Models;
@@ -11,12 +12,17 @@ namespace Wolverine.Weather.API.Controllers
     {
         private readonly ILogger<WeatherForecastController> _logger; 
         private readonly IWeatherForecastService _weatherForecastService;
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, IWeatherForecastService weatherForecastService)
+        private readonly IMapper _mapper;
+        public WeatherForecastController(
+            ILogger<WeatherForecastController> logger,
+            IWeatherForecastService weatherForecastService,
+            IMapper mapper
+            )
         {
             _logger = logger;
             _weatherForecastService = weatherForecastService;
+            _mapper = mapper;
         }
-
         [HttpGet] //The get attribute tag does not need a name Ex. [HttpGet(Name = GetWeatherForecast)]. C# will name it after the controller by truncating off the "*Controller" part
         public IEnumerable<WeatherForecast> GetAll()
         {
@@ -25,11 +31,22 @@ namespace Wolverine.Weather.API.Controllers
         }
         [HttpGet]
         [Route("{id}")]
-        //Homework return 1 specific forecast.
-        public WeatherForecast Get(int id)
+        public WeatherForecast Get(int id) //Homework: Fix this
         {
             var result = _weatherForecastService.GetWeatherForecast(id);
             return result;
         }
+        [HttpPost]
+        public async Task<ActionResult> Post(AddWeatherForecastRequest request, CancellationToken cancellationToken)
+        {
+            if(request is null || !request.Date.HasValue || !request.TemperatureC.HasValue || string.IsNullOrWhiteSpace(request.Summary))
+            {
+                return BadRequest("Hey dummy you forgot a field");
+            }
+            var result = await _weatherForecastService.AddWeatherForecast(request, cancellationToken);
+            var viewModel = _mapper.Map<WeatherForecastViewModel>(result); 
+            return Ok(result);
+        }
+        
     }
 }

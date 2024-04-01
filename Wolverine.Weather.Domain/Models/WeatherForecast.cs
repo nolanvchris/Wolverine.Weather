@@ -1,5 +1,8 @@
 namespace Wolverine.Weather.Domain.Models
 {
+    /// <summary>
+    /// WeatherForecast Model to only be used internally, passing data from the repository up to the controller level.
+    /// </summary>
     public class WeatherForecast
     {
         public DateTime Date { get; set; }
