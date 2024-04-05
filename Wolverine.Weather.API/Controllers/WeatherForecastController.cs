@@ -23,30 +23,35 @@ namespace Wolverine.Weather.API.Controllers
             _weatherForecastService = weatherForecastService;
             _mapper = mapper;
         }
+
         [HttpGet] //The get attribute tag does not need a name Ex. [HttpGet(Name = GetWeatherForecast)]. C# will name it after the controller by truncating off the "*Controller" part
-        public IEnumerable<WeatherForecast> GetAll()
+        public async Task<ActionResult<IEnumerable<WeatherForecast>>> GetAll(CancellationToken cancellationToken) //HOMEWORK 4.2.2024: Do this the correct way 
         {
-            var result = _weatherForecastService.GetWeatherForecasts();
-            return result;
+            var result = await _weatherForecastService.GetWeatherForecasts(cancellationToken);
+            return Ok(result);
         }
+
         [HttpGet]
         [Route("{id}")]
-        public async Task<WeatherForecast> Get(int id, CancellationToken cancellationToken) //Homework: Fix this
+        public async Task<ActionResult<WeatherForecast>> Get(int id, CancellationToken cancellationToken)
         {
+            if(id <= 0)
+            {
+                return BadRequest($"Invalid Id:{id}");
+            }
             var result = await _weatherForecastService.GetWeatherForecast(id, cancellationToken);
-            return result;
+            return Ok(result);
         }
         [HttpPost]
-        public async Task<ActionResult> Post(AddWeatherForecastRequest request, CancellationToken cancellationToken)
+        public async Task<ActionResult<WeatherForecastViewModel>> Post(AddWeatherForecastRequest request, CancellationToken cancellationToken)
         {
             if(request is null || !request.Date.HasValue || !request.TemperatureC.HasValue || string.IsNullOrWhiteSpace(request.Summary))
             {
                 return BadRequest("Hey dummy you forgot a field");
             }
             var result = await _weatherForecastService.AddWeatherForecast(request, cancellationToken);
-            var viewModel = _mapper.Map<WeatherForecastViewModel>(result); 
-            return Ok(result);
+            var viewModel = _mapper.Map<WeatherForecastViewModel>(result); //HomeWork 4/5/2024: Data and TemperatureF are not getting values. Fix this
+            return Ok(viewModel);
         }
-        
     }
 }

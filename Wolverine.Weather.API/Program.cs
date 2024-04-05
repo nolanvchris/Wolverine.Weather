@@ -1,3 +1,4 @@
+using Wolverine.Weather.API.Profiles;
 using Wolverine.Weather.Domain.Interfaces;
 using Wolverine.Weather.Domain.Services;
 using Wolverine.Weather.Infrastructure.Profiles;
@@ -25,7 +26,7 @@ namespace Wolverine.Weather.API
             builder.Services.AddSingleton<IDatabaseConnectionFactory, DatabaseConnectionFactory>();
             builder.Services.Configure<DatabaseConfigurationSection>(builder.Configuration.GetSection("DatabaseConfiguration"));
             
-            List<Type> scanTypes = new List<Type> { typeof(InfrastructureProfile) };
+            List<Type> scanTypes = new List<Type> { typeof(InfrastructureProfile), typeof(ViewModelProfiles) };
             builder.Services.AddAutoMapper(options =>
             {
                 options.AllowNullCollections = true;

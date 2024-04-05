@@ -4,7 +4,7 @@ namespace Wolverine.Weather.Domain.Interfaces
 {
     public interface IWeatherForecastService
     {
-        IEnumerable<WeatherForecast> GetWeatherForecasts();
+        Task<IEnumerable<WeatherForecast>> GetWeatherForecasts(CancellationToken cancellationToken);
         Task<WeatherForecast> GetWeatherForecast(int id, CancellationToken cancellationToken);
         Task<WeatherForecast> AddWeatherForecast(AddWeatherForecastRequest request, CancellationToken cancellationToken);
     }

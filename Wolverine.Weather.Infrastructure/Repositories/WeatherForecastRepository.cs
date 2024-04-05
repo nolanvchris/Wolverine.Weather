@@ -30,12 +30,29 @@ namespace Wolverine.Weather.Infrastructure.Repositories
             _databaseConfiguration = databaseConfiguration.Value;
         }
 
-        public IEnumerable<WeatherForecast> GetWeatherForecasts()
+        public async Task<IEnumerable<WeatherForecast>> GetWeatherForecasts(CancellationToken cancellationToken)
         {
-            using(var connection = _databaseConnectionFactory.GetWeatherDbConnection())
+            try
             {
-                var result = connection.Query<WeatherForecast>("SELECT * FROM dbo.WeatherForecasts");
-                return result;
+                string storedProcedure = _databaseConfiguration.StoredProcedureNames.WeatherForecastGetAllStoredProcedureName;
+
+                using (var connection = _databaseConnectionFactory.GetWeatherDbConnection())
+                {
+                    var command = new CommandDefinition(
+                        storedProcedure,
+                        commandType: CommandType.StoredProcedure,
+                        commandTimeout: _databaseConnectionFactory.CommandTimeout,
+                        cancellationToken: cancellationToken);
+
+                    var result = await connection.QueryAsync<WeatherForecastDto>(command);//Single or default finds only one thing or throws exception.
+                    var fromSource = _mapper.Map<IEnumerable<WeatherForecast>>(result);
+                    return fromSource;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error on {nameof(GetWeatherForecasts)} exception message: {ex.Message}");
+                throw;
             }
         }
 
@@ -58,14 +75,14 @@ namespace Wolverine.Weather.Infrastructure.Repositories
                         commandTimeout: _databaseConnectionFactory.CommandTimeout,
                         cancellationToken: cancellationToken);
 
-                    var result = await connection.QueryFirstOrDefaultAsync<WeatherForecastDto>(command);
+                    var result = await connection.QuerySingleOrDefaultAsync<WeatherForecastDto>(command);//Single or default finds only one thing or throws exception.
                     var fromSource = _mapper.Map<WeatherForecast>(result);
                     return fromSource;
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error on {nameof(AddWeatherForecast)} exception message: {ex.Message}");
+                _logger.LogError($"Error on {nameof(GetWeatherForecast)} exception message: {ex.Message}");
                 throw;
             }
         }
@@ -90,7 +107,7 @@ namespace Wolverine.Weather.Infrastructure.Repositories
                         commandTimeout: _databaseConnectionFactory.CommandTimeout,
                         cancellationToken: cancellationToken);
 
-                    var result = await connection.QueryFirstOrDefaultAsync<WeatherForecastDto>(command);
+                    var result = await connection.QuerySingleOrDefaultAsync<WeatherForecastDto>(command);
                     var fromSource = _mapper.Map<WeatherForecast>(result);
                     return fromSource;
                 }
