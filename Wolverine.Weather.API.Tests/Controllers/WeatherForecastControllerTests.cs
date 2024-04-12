@@ -71,6 +71,7 @@ namespace Wolverine.Weather.API.Tests.Controllers
                 viewModel!.TemperatureFDisplay.Should().Be((32 + (int)(request.TemperatureC / 0.5556)).ToString() + "°F");
             }
         }
+        #region BadRequestTests
         [TestMethod]
         public async Task Post_DateTimeNoValue_ReturnsBadRequest()
         {
@@ -100,5 +101,9 @@ namespace Wolverine.Weather.API.Tests.Controllers
                 test.StatusCode!.Value.Should().Be((int)HttpStatusCode.BadRequest); // should be indicating an issue
             }
         }
+        //TODO: Unit test for when post request is null returns bad request
+
+        //TODO: Unit test for when post request when summary is null returns bad request
+        #endregion
     }
 }
