@@ -45,12 +45,12 @@ namespace Wolverine.Weather.API.Controllers
         [HttpPost]
         public async Task<ActionResult<WeatherForecastViewModel>> Post(AddWeatherForecastRequest request, CancellationToken cancellationToken)
         {
-            if(request is null || !request.Date.HasValue || !request.TemperatureC.HasValue || string.IsNullOrWhiteSpace(request.Summary))
+            if(request is null || !request.DateAndTime.HasValue || !request.TemperatureC.HasValue || string.IsNullOrWhiteSpace(request.Summary))
             {
                 return BadRequest("Hey dummy you forgot a field");
             }
             var result = await _weatherForecastService.AddWeatherForecast(request, cancellationToken);
-            var viewModel = _mapper.Map<WeatherForecastViewModel>(result); //HomeWork 4/5/2024: Data and TemperatureF are not getting values. Fix this
+            var viewModel = _mapper.Map<WeatherForecastViewModel>(result); //HomeWork 4/5/2024: Date and TemperatureF are not getting values from the database, perhaps something wrong with mapping. Fix this
             return Ok(viewModel);
         }
     }

@@ -13,7 +13,7 @@ namespace Wolverine.Weather.Infrastructure.Repositories
 {
     public class WeatherForecastRepository : IWeatherForecastRepository
     {
-        private readonly IDatabaseConnectionFactory _databaseConnectionFactory; //This is how we instantiate an interface class.
+        private readonly IDatabaseConnectionFactory _databaseConnectionFactory; //These are the dependencies, instead of creating them in the class we are "injecting" them in
         private readonly ILogger<WeatherForecastRepository> _logger;
         private readonly IMapper _mapper;
         private readonly DatabaseConfigurationSection _databaseConfiguration;
@@ -94,9 +94,9 @@ namespace Wolverine.Weather.Infrastructure.Repositories
                 string storedProcedure = _databaseConfiguration.StoredProcedureNames.WeatherForecastInsertStoredProcedureName;
 
                 var parameters = new DynamicParameters();
-                parameters.Add("@DateAndTime", request.Date, DbType.DateTime);
-                parameters.Add("@TemperatureC", request.TemperatureC, DbType.Int32);
-                parameters.Add("@Summary", request.Summary, DbType.String);
+                parameters.Add("@pDateAndTime", request.DateAndTime, DbType.DateTime);
+                parameters.Add("@pTemperatureC", request.TemperatureC, DbType.Int32);
+                parameters.Add("@pSummary", request.Summary, DbType.String);
 
                 using (var connection = _databaseConnectionFactory.GetWeatherDbConnection())
                 {
@@ -107,7 +107,7 @@ namespace Wolverine.Weather.Infrastructure.Repositories
                         commandTimeout: _databaseConnectionFactory.CommandTimeout,
                         cancellationToken: cancellationToken);
 
-                    var result = await connection.QuerySingleOrDefaultAsync<WeatherForecastDto>(command);
+                    var result = await connection.QueryFirstOrDefaultAsync<WeatherForecastDto>(command);
                     var fromSource = _mapper.Map<WeatherForecast>(result);
                     return fromSource;
                 }

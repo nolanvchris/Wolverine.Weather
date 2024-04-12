@@ -2,7 +2,7 @@
 {
     public class AddWeatherForecastRequest
     {
-        public DateTime? Date { get; set; }
+        public DateTime? DateAndTime { get; set; }
         public int? TemperatureC { get; set; }
         public string? Summary { get; set; }
     }
