@@ -17,7 +17,7 @@ namespace Wolverine.Weather.Infrastructure.Repositories
         public int RetryAttempts => _databaseConfiguration.RetryAttempts;
         public IDbConnection GetWeatherDbConnection()
         {
-            var connection = new SqlConnection(_databaseConfiguration.ConnectionStrings.WolverineDB);
+            var connection = new SqlConnection(_databaseConfiguration?.ConnectionStrings?.WolverineDB);
             return connection;
         }
     }
