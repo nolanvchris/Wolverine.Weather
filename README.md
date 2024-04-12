@@ -1,1 +1,1 @@
-This is a .NET6 RESTful API example including swagger
+This is a .NET8 RESTful API example including swagger

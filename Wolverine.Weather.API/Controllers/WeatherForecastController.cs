@@ -10,7 +10,6 @@ namespace Wolverine.Weather.API.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private readonly ILogger<WeatherForecastController> _logger; 
         private readonly IWeatherForecastService _weatherForecastService;
         private readonly IMapper _mapper;
         public WeatherForecastController(
@@ -19,7 +18,6 @@ namespace Wolverine.Weather.API.Controllers
             IMapper mapper
             )
         {
-            _logger = logger;
             _weatherForecastService = weatherForecastService;
             _mapper = mapper;
         }
