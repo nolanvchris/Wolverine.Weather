@@ -5,7 +5,7 @@ using Wolverine.Weather.Infrastructure.Settings;
 
 namespace Wolverine.Weather.API
 {
-    public static class Program
+    public class Program
     {
         public static void Main(string[] args)
         {
