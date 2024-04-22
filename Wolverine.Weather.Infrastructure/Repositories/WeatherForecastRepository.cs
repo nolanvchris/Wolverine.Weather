@@ -56,7 +56,7 @@ namespace Wolverine.Weather.Infrastructure.Repositories
             }
         }
 
-        public async Task<WeatherForecast> GetWeatherForecast(int id, CancellationToken cancellationToken)
+        public async Task<WeatherForecast> GetWeatherForecast(Guid ExternalId, CancellationToken cancellationToken)
         {
             try
             {
@@ -64,7 +64,7 @@ namespace Wolverine.Weather.Infrastructure.Repositories
 
                 var parameters = new DynamicParameters();
 
-                parameters.Add("@Id", id, DbType.Int32);
+                parameters.Add("@pExternalId", ExternalId, DbType.Guid);
 
                 using (var connection = _databaseConnectionFactory.GetWeatherDbConnection())
                 {
