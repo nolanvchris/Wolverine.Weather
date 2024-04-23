@@ -26,7 +26,7 @@ namespace Wolverine.Weather.API.Tests.Controllers
         public async Task Post_HappyPath() //successful run through post. no errors
         {
             //Arrange
-            const string summary = "Tests"; //using constant to make these temper proof.
+            const string summary = "Tests"; //using constant to make these tamper proof.
             const int temperatureC = 32;
             
             var request = new AddWeatherForecastRequest
@@ -39,7 +39,7 @@ namespace Wolverine.Weather.API.Tests.Controllers
             _mockWeatherForecastService.Setup(x => x.AddWeatherForecast(
                 It.IsAny<AddWeatherForecastRequest>(), //It.IsAny any parameter
                 It.IsAny<CancellationToken>() 
-                )).ReturnsAsync(new WeatherForecast //Forces this to be returned because we don't need to go further than the service layer
+                )).ReturnsAsync(new WeatherForecast //Forces this model to be returned because we don't need to go further than the service layer
                 { 
                     DateAndTime = request.DateAndTime.Value, 
                     Summary = request.Summary, 
@@ -51,13 +51,13 @@ namespace Wolverine.Weather.API.Tests.Controllers
             var response = await weatherForecastController.Post(request, CancellationToken.None);
             
             //Assert
-            using(new AssertionScope()) //Assertion Scope will
+            using(new AssertionScope())
             {
                 response.Should().NotBeNull();
 
                 var test = response.Result as OkObjectResult;
-                test!.StatusCode.HasValue.Should().BeTrue(); // should have a value
-                test.StatusCode!.Value.Should().Be((int)HttpStatusCode.OK); // should be ok
+                test!.StatusCode.HasValue.Should().BeTrue(); 
+                test.StatusCode!.Value.Should().Be((int)HttpStatusCode.OK); 
                 test.Value.Should().BeOfType<WeatherForecastViewModel>();
                 test.Value.Should().BeEquivalentTo(new WeatherForecastViewModel
                 {
@@ -75,7 +75,6 @@ namespace Wolverine.Weather.API.Tests.Controllers
         [TestMethod]
         public async Task Post_DateTimeNoValue_ReturnsBadRequest()
         {
-            //var test = response.Result as BadResponse; //Homeowrk: Negative test, when date time has a bad value it shoudl be returning a bad response not "OK. Write so Date time has a bad value.
             //Arrange
             const string summary = "Tests"; //using constant to make these temper proof.
             const int temperatureC = 32;
@@ -92,7 +91,7 @@ namespace Wolverine.Weather.API.Tests.Controllers
             var response = await weatherForecastController.Post(request, CancellationToken.None);
 
             //Assert
-            using (new AssertionScope()) //Assertion Scope will
+            using (new AssertionScope()) //Assertion Scope will allow more than one assertion to be tested at a time.
             {
                 response.Should().NotBeNull(); //Should be null? 
 
@@ -101,9 +100,87 @@ namespace Wolverine.Weather.API.Tests.Controllers
                 test.StatusCode!.Value.Should().Be((int)HttpStatusCode.BadRequest); // should be indicating an issue
             }
         }
-        //TODO: Unit test for when post request is null returns bad request
+        [TestMethod]
+        public async Task Post_TemperatureCNoValue_ReturnsBadRequest()
+        {
+            //Arrange
+            const string summary = "Tests"; //using constant to make these temper proof.
 
-        //TODO: Unit test for when post request when summary is null returns bad request
+            var request = new AddWeatherForecastRequest
+            {
+                Summary = summary,
+                DateAndTime = DateTime.UtcNow,
+                TemperatureC = null,
+            };
+
+            //Act
+            var weatherForecastController = ClassUnderTest();
+            var response = await weatherForecastController.Post(request, CancellationToken.None);
+
+            //Assert
+            using (new AssertionScope())
+            {
+                response.Should().NotBeNull(); //Should be null? 
+
+                var test = response.Result as BadRequestObjectResult;
+                test!.StatusCode.HasValue.Should().BeTrue(); // should have a value
+                test.StatusCode!.Value.Should().Be((int)HttpStatusCode.BadRequest); // should be indicating an issue
+            }
+        }
+        [TestMethod]
+        public async Task Post_SummaryNoValue_ReturnsBadRequest()
+        {
+            //Arrange
+            const int temperatureC = 32;
+
+            var request = new AddWeatherForecastRequest
+            {
+                Summary = null,
+                DateAndTime = DateTime.UtcNow,
+                TemperatureC = temperatureC,
+            };
+
+            //Act
+            var weatherForecastController = ClassUnderTest();
+            var response = await weatherForecastController.Post(request, CancellationToken.None);
+
+            //Assert
+            using (new AssertionScope())
+            {
+                response.Should().NotBeNull(); 
+
+                var test = response.Result as BadRequestObjectResult;
+                test!.StatusCode.HasValue.Should().BeTrue(); 
+                test.StatusCode!.Value.Should().Be((int)HttpStatusCode.BadRequest); 
+            }
+        }
+
+        [TestMethod]
+        public async Task Post_RequestNoValues_ReturnsBadRequest()
+        {
+            //Arrange
+            var request = new AddWeatherForecastRequest
+            {
+                Summary = null,
+                DateAndTime = null,
+                TemperatureC = null,
+            };
+
+            //Act
+            var weatherForecastController = ClassUnderTest();
+            var response = await weatherForecastController.Post(request, CancellationToken.None);
+
+            //Assert
+            using (new AssertionScope())
+            {
+                response.Should().NotBeNull();
+
+                var test = response.Result as BadRequestObjectResult;
+                test!.StatusCode.HasValue.Should().BeTrue();
+                test.StatusCode!.Value.Should().Be((int)HttpStatusCode.BadRequest);
+            }
+        }
+
         #endregion
     }
 }

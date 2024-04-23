@@ -11,9 +11,9 @@ namespace Wolverine.Weather.Domain.Services
             _weatherForecastRepository = weatherForecastRepository;
         }
 
-        public async Task<WeatherForecast> GetWeatherForecast(int id, CancellationToken cancellationToken)
+        public async Task<WeatherForecast> GetWeatherForecast(Guid ExternalId, CancellationToken cancellationToken)
         {
-            return await _weatherForecastRepository.GetWeatherForecast(id, cancellationToken);
+            return await _weatherForecastRepository.GetWeatherForecast(ExternalId, cancellationToken);
         }
 
         public async Task<IEnumerable<WeatherForecast>> GetWeatherForecasts(CancellationToken cancellationToken)

@@ -6,5 +6,6 @@
         public DateTime DateAndTime { get; set; }
         public int TemperatureC { get; set; }
         public string? Summary { get; set; }
+        public Guid ExternalId { get; set; } 
     }
 }
