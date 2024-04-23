@@ -33,10 +33,6 @@ namespace Wolverine.Weather.API.Controllers
         [Route("{ExternalId}")]
         public async Task<ActionResult<WeatherForecast>> Get(Guid ExternalId, CancellationToken cancellationToken)
         {
-            //if(ExternalId <= 0)
-            //{
-            //    return BadRequest($"Invalid Id:{ExternalId}");
-            //}
             var result = await _weatherForecastService.GetWeatherForecast(ExternalId, cancellationToken);
             return Ok(result);
         }
