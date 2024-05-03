@@ -7,5 +7,6 @@ namespace Wolverine.Weather.Domain.Interfaces
         Task<IEnumerable<WeatherForecast>> GetWeatherForecasts(CancellationToken cancellationToken);
         Task<WeatherForecast> GetWeatherForecast(Guid ExternalId, CancellationToken cancellationToken);
         Task<WeatherForecast> AddWeatherForecast(AddWeatherForecastRequest request, CancellationToken cancellationToken);
+        Task<bool> IsWeatherForecastDateAlreadyUsed(DateTime date, CancellationToken cancellationToken);
     }
 }

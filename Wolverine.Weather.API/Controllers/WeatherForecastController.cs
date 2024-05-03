@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Wolverine.Weather.Domain.Exceptions;
 using Wolverine.Weather.Domain.Interfaces;
 using Wolverine.Weather.Domain.Models;
 using Wolverine.Weather.Domain.ViewModels;
@@ -37,6 +38,13 @@ namespace Wolverine.Weather.API.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Add WeatherForecast
+        /// </summary>
+        /// <remarks>DateTime must always be unique, no repeat times allowed.</remarks>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<WeatherForecastViewModel>> Post(AddWeatherForecastRequest request, CancellationToken cancellationToken)
         {
@@ -44,9 +52,16 @@ namespace Wolverine.Weather.API.Controllers
             {
                 return BadRequest("Missing field");
             }
-            var result = await _weatherForecastService.AddWeatherForecast(request, cancellationToken);
-            var viewModel = _mapper.Map<WeatherForecastViewModel>(result); 
-            return Ok(viewModel);
+            try
+            {
+                var result = await _weatherForecastService.AddWeatherForecast(request, cancellationToken);
+                var viewModel = _mapper.Map<WeatherForecastViewModel>(result);
+                return Ok(viewModel);
+            }
+            catch(InsertWeatherForecastValidationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
